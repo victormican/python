@@ -1,32 +1,37 @@
+import datetime
+
 class Vista:
-    def mostrar_menu(self):
-        print("1. Agregar salón")
-        print("2. Ver salones")
-        print("3. Reservar salón")
-        print("4. Salir")
+    def __init__(self, controlador):
+        self.controlador = controlador
 
-    def pedir_opcion(self):
-        opcion = input("Ingrese una opción: ")
-        return opcion
+    def mostrar_salones_disponibles(self, fecha_seleccion):
+        salones_disponibles = self.controlador.mostrar_salones_disponibles(fecha_seleccion)
+        print("Salones comunales disponibles:")
+        for i, salon in enumerate(salones_disponibles):
+            print(str(i+1) + ". " + salon)
 
-    def pedir_datos_salon(self):
-        nombre = input("Ingrese el nombre del salón: ")
-        capacidad = int(input("Ingrese la capacidad del salón: "))
-        return (nombre, capacidad)
+    def agregar_reservacion(self):
+        fecha = input("Ingrese la fecha de selección (formato dd/mm/yyyy): ")
+        fecha = datetime.datetime.strptime(fecha, "%d/%m/%Y")
+        self.mostrar_salones_disponibles(fecha)
+        seleccion = input("Seleccione un salón comunal (1-3): ")
+        indice_salon = int(seleccion) - 1
+        nombre = input("Ingrese su nombre: ")
+        cedula = input("Ingrese su cedula: ")
+        salon_comunal = self.controlador.mostrar_salones_disponibles(fecha)[indice_salon]
+        self.controlador.agregar_reservacion(fecha, salon_comunal, nombre, cedula)
+        print("Reservación realizada con éxito.")
 
-    def pedir_datos_reserva(self):
-        salon = input("Ingrese el nombre del salón: ")
-        fecha = input("Ingrese la fecha (dd/mm/aaaa): ")
-        hora_inicio = input("Ingrese la hora de inicio (hh:mm): ")
-        hora_fin = input("Ingrese la hora de fin (hh:mm): ")
-        return (salon, fecha, hora_inicio, hora_fin)
-
-    def mostrar_salones(self, salones):
-        for salon in salones:
-            print(f"Nombre: {salon.nombre}, Capacidad: {salon.capacidad}, Reservas: {salon.reservas}")
-
-    def mostrar_confirmacion(self):
-        print("La reserva se realizó correctamente")
-
-    def mostrar_error(self, mensaje):
-        print(f"Error: {mensaje}")
+    def menu_principal(self):
+        while True:
+            print("Bienvenido a su gestor de Salones Comunales")
+            print("Seleccione su opcion :")
+            print("1. Reservar salón comunal")
+            print("2. Salir")
+            seleccion = input("Seleccione una opción: ")
+            if seleccion == "1":
+                self.agregar_reservacion()
+            elif seleccion == "2":
+                break
+            else:
+                print("Selección inválida.")
