@@ -1,0 +1,1 @@
+#Este proyecto es de reservas de SALONES COMUNALES en python con patron MVC
